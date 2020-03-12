@@ -1,0 +1,86 @@
+CREATE TABLE Clase (
+clasa VARCHAR(30),
+tip VARCHAR(3),
+tara VARCHAR(30),
+nr_arme INTEGER(4),
+diametru_tun INTEGER(10),
+deplasament INTEGER(10)
+);
+
+
+CREATE TABLE Nave (
+nume VARCHAR(30),
+clasa VARCHAR(30),
+anul_lansarii INTEGER(4)
+);
+
+
+CREATE TABLE Batalii (
+nume VARCHAR(30),
+data DATE
+);
+
+
+CREATE TABLE Consecinte (
+nava VARCHAR(30),
+batalie  VARCHAR(30),
+rezultat VARCHAR(10)
+);
+
+INSERT INTO Clase(clasa,tip,tara,nr_arme,diametru_tun,deplasament) values ('Barba Rosa', 'vl', 'Romania', 85, 10, 2);
+INSERT INTO Clase(clasa,tip,tara,nr_arme,diametru_tun,deplasament) values ('Deutschland', 'cr', 'Germany', 9, 40, 4);
+INSERT INTO Clase(clasa,tip,tara,nr_arme,diametru_tun,deplasament) values ('Prometheus', 'cr', 'China', 1020, 14, 35);
+INSERT INTO Clase(clasa,tip,tara,nr_arme,diametru_tun,deplasament) values ('Danube', 'vl', 'Ucraina', 6053, 13, 40);
+INSERT INTO Clase(clasa,tip,tara,nr_arme,diametru_tun,deplasament) values ('Excelsior', 'vl', 'Rusia', 100, 11, 12);
+INSERT INTO Clase(clasa,tip,tara,nr_arme,diametru_tun,deplasament) values ('The magnificent', 'cr', 'Danemarca', 8, 32, 20);
+
+
+INSERT INTO Nave(nume, clasa,anul_lansarii) values ('Deutschland', 'Deutschland', 1917);
+INSERT INTO Nave(nume, clasa,anul_lansarii) values ('Sirena', 'Deutschland', 1975);
+INSERT INTO Nave(nume, clasa,anul_lansarii) values ('Excelsior', 'Excelsior', 1920);
+INSERT INTO Nave(nume, clasa,anul_lansarii) values ('Prometheus', 'Prometheus', 1990);
+INSERT INTO Nave(nume, clasa,anul_lansarii) values ('Danube', 'Danube', 1949);
+INSERT INTO Nave(nume, clasa,anul_lansarii) values ('Barba Rosa', 'Barba Rosa', 1990);
+INSERT INTO Nave(nume, clasa,anul_lansarii) values ('The magnificent', 'The magnificent', 1990);
+
+
+INSERT INTO Batalii(nume, data) values ('Battle of Narvik', STR_TO_DATE('12/20/1988','%m/%d/%Y'));
+INSERT INTO Batalii(nume, data) values ('Battle of Waterloo', STR_TO_DATE('05/15/1916','%m/%d/%Y'));
+INSERT INTO Batalii(nume, data) values ('Battle of Gettysburg', STR_TO_DATE('12/20/1975','%m/%d/%Y'));
+INSERT INTO Batalii(nume, data) values ('Battle of Leipzig', STR_TO_DATE('02/02/1812','%m/%d/%Y'));
+INSERT INTO Batalii(nume, data) values ('Battle of Deutschland', STR_TO_DATE('06/24/1977','%m/%d/%Y'));
+INSERT INTO Batalii(nume, data) values ('Battle of Madrid', STR_TO_DATE('07/12/1987','%m/%d/%Y'));
+INSERT INTO Batalii(nume, data) values ('Battle of Stalingrad', STR_TO_DATE('07/23/1942','mm/dd/yyyy'));
+INSERT INTO Batalii(nume, data) values ('Battle of Unmortals', STR_TO_DATE('11/05/1989','%m/%d/%Y'));
+INSERT INTO Batalii(nume, data) values ('Battle of Rivals', STR_TO_DATE('03/21/1999','%m/%d/%Y'));
+
+
+
+INSERT INTO Consecinte(nava, batalie, rezultat) values ('Sirena','Battle of Narvik','scufundat');
+INSERT INTO Consecinte(nava, batalie, rezultat) values ('Danube','Battle of Gettysburg','avariat');
+INSERT INTO Consecinte(nava, batalie, rezultat) values ('Deutschland','Battle of Waterloo','avariat');
+INSERT INTO Consecinte(nava, batalie, rezultat) values ('Prometheus','Battle of Deutschland','scufundat');
+INSERT INTO Consecinte(nava, batalie, rezultat) values ('Excelsior','Battle of Leipzig','nevatamat');
+INSERT INTO Consecinte(nava, batalie, rezultat) values ('Barba Rosa','Battle of Madrid','nevatamat');
+INSERT INTO Consecinte(nava, batalie, rezultat) values ('The magnificent','Battle of Stalingrad','avariat');
+
+
+ALTER TABLE Clase ADD PRIMARY KEY (clasa);
+ALTER TABLE Nave ADD PRIMARY KEY (nume);
+ALTER TABLE Batalii ADD PRIMARY KEY (nume);
+ALTER TABLE Consecinte ADD PRIMARY KEY (nava,batalie);
+
+ALTER TABLE Nave ADD FOREIGN KEY (clasa) REFERENCES Clase (clasa);
+ALTER TABLE Consecinte ADD FOREIGN KEY (batalie) REFERENCES Batalii (nume);
+ALTER TABLE Consecinte ADD FOREIGN KEY (nava) REFERENCES Nave (nume);
+
+
+
+ALTER TABLE Batalii
+ADD(locatie VARCHAR(30));
+
+
+ALTER TABLE Nave ADD CONSTRAINT CHK_an_lansare CHECK (anul_lansarii > 1915);
+
+
+ALTER TABLE Clase ADD CONSTRAINT CHK_diam_arme CHECK (diametru_tun < 15 OR nr_arme < 10);

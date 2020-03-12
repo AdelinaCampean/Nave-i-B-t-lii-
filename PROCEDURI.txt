@@ -1,0 +1,66 @@
+--PRIMA PROCEDURA DE LA INTEROGAREA 3 a
+
+CREATE PROCEDURE interogare_3_a (IN tip_vas VARCHAR(3))
+BEGIN 
+DECLARE nume_clasa VARCHAR(30);
+DECLARE nume_tara VARCHAR(30);
+DECLARE verif BOOL DEFAULT true;
+
+DECLARE cursor1 CURSOR FOR 
+SELECT clasa, tara 
+FROM Clase 
+WHERE (tip = tip_vas);
+
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET verif = false;
+
+OPEN cursor1;
+
+CREATE TEMPORARY TABLE rezultat(
+    clasa VARCHAR(30),
+    tara VARCHAR(30)
+   );
+
+model: LOOP 
+	FETCH cursor1 INTO nume_clasa, nume_tara;
+    IF  verif = false THEN LEAVE model;
+    END IF;
+    INSERT INTO rezultat(clasa, tara) VALUES (nume_clasa,nume_tara);
+    END LOOP model;
+    SELECT * FROM rezultat;
+    DROP TEMPORARY TABLE IF EXISTS rezultat;
+END
+
+
+--A DOUA PROCEDURA DE LA INTEROGAREA 4 a
+
+CREATE PROCEDURE interogare_4_a (IN nume_bat VARCHAR(30))
+BEGIN 
+DECLARE nume_nave VARCHAR(30);
+DECLARE numar_arme INT;
+DECLARE nr_deplasament INT;
+DECLARE verif BOOL DEFAULT true ;
+
+DECLARE model_cursor CURSOR FOR 
+SELECT Nave.nume, Clase.deplasament, Clase.nr_arme 
+FROM Clase INNER JOIN Nave ON (Clase.clasa=Nave.clasa) INNER JOIN Consecinte ON (Nave.nume = Consecinte.nava) INNER JOIN Batalii ON (Batalii.nume= Consecinte.batalie)  
+WHERE (Consecinte.batalie= nume_bat);
+
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET verif = false;
+
+OPEN model_cursor;
+
+CREATE TEMPORARY TABLE rez (
+    nava VARCHAR(30),
+    deplasament INTEGER(10), 
+    nr_arme INTEGER(4) 
+ );
+   
+model: LOOP
+	FETCH model_cursor INTO nume_nave, nr_deplasament, numar_arme;
+    IF verif = false THEN LEAVE model;
+    END IF;
+    INSERT INTO rez(nava, deplasament, nr_arme) VALUES (nume_nave, nr_deplasament, numar_arme);
+    END LOOP model;
+    SELECT * FROM rez;
+    DROP TEMPORARY TABLE IF EXISTS rez;
+    END;
